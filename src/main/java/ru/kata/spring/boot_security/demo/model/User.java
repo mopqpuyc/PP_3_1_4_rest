@@ -9,6 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -36,10 +37,13 @@ public class User implements UserDetails {
 
     @Column(name = "password")
     @NotEmpty(message = "Password should not be empty")
-    @Size(min = 1, max = 5, message = "Name length should be between 1 and 5")
+    @Size(min = 1, message = "Name length should be more 1")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(columnDefinition = "user_id"),
+            inverseJoinColumns = @JoinColumn(columnDefinition = "role_id"))
     private Set<Role> roles;
 
     public User() {}
@@ -120,5 +124,13 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
+    }
+
+    public boolean hasRole(int roleId) {
+        if (null == roles|| 0 == roles.size()) {
+            return false;
+        }
+        Optional<Role> findRole = roles.stream().filter(role -> roleId == role.getId()).findFirst();
+        return findRole.isPresent();
     }
 }

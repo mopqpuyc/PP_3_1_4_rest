@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>User List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>User List</h1>
+<div>
+    <table th:border="1">
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>age</th>
+            <th>username</th>
+            <th>password</th>
+            <th>roles</th>
+        </tr>
+        <tr th:each ="user : ${userList}">
+            <td th:utext="${user.id}">...</td>
+            <td th:utext="${user.name}">...</td>
+            <td th:utext="${user.age}">...</td>
+            <td th:utext="${user.username}">...</td>
+            <td th:utext="${user.password}">...</td>
+            <td th:text="${#strings.setJoin(user.roles,',')}"></td>
+            <td>
+                <button type="button">
+                    <a th:href="@{/admin/{id}/edit(id=${user.id})}">edit</a>
+                </button>
+            </td>
+            <td>
+                <form th:method="DELETE" th:action="@{/admin/{id}/delete(id=${user.id})}">
+                    <input type="submit" value="delete">
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+<a th:href="@{/admin/new}">Add new user</a>
+<br>
+<a th:href="@{/logout}">logout</a>
+</body>
+</html>

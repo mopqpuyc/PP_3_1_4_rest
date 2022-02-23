@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Edit user</title>
 </head>
 <body>
 
-<form th:method="PUT" th:action="@{/{id}(id=${user.id})}" th:object="${user}">
+<form th:method="PUT" th:action="@{/admin/{id}(id=${user.id})}" th:object="${user}">
 
-    <input type="hidden" name="_method" value="patch">
+    <input type="hidden" name="_method" value="put">
 
     <label for="name">Enter name</label>
     <input type="text" th:field="*{name}" id="name"/>
@@ -18,9 +18,29 @@
     <input type="text" th:field="*{age}" id="age"/>
     <div style="color: orangered" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age error</div>
     <br/>
+    <label for="username">Enter username</label>
+    <input type="text" th:field="*{username}" id="username"/>
+    <div style="color:orangered" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
+    <br>
+    <label for="password">Enter password</label>
+    <input type="text" th:field="*{password}" id="password"/>
+    <br>
+
+    <p>
+        <label>Roles:
+            <input type="checkbox" name="rolesName"
+                   th:each="role : ${allRoles}"
+                   th:text="${role.name}"
+                   th:checked="${user.hasRole('__${role.id}__')}"
+                   th:value="${role}"
+            />
+        </label>
+    </p>
+
     <br/>
     <input type="submit" value="update"/>
 </form>
-
+<br>
+<a th:href="@{/logout}">logout</a>
 </body>
 </html>
