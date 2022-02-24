@@ -39,15 +39,18 @@ public class AdminController {
     }
 
     @GetMapping("/new")
-    public String addUser(@ModelAttribute("user") User user) {
+    public String addUser(@ModelAttribute("user") User user, ModelMap model) {
+        model.addAttribute("allRoles", userService.getAllRoles());
         return "new";
     }
 
     @PostMapping()
-    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    public String createUser(@ModelAttribute("user") @Valid User user,
+                             BindingResult bindingResult,
+                             @RequestParam(value = "rolesName", defaultValue = "") String[] rolesName) {
         if(bindingResult.hasErrors())
             return "new";
-        userService.createUser(user);
+        userService.createUser(setUserRoles(user, rolesName));
         return "redirect:/admin";
     }
 
@@ -64,19 +67,21 @@ public class AdminController {
                              @RequestParam(value = "rolesName", defaultValue = "") String[] rolesName) {
         if(bindingResult.hasErrors())
             return "edit";
-        Set<Role> roleSet = new HashSet<>();
+        userService.editUser(setUserRoles(user, rolesName));
+        return "redirect:/admin";
+    }
 
+    private User setUserRoles(User user, String[] rolesName) {
+        Set<Role> roleSet = new HashSet<>();
         //Создание нового списка ролей из rolesName
         for (Role role : userService.getAllRoles()) {
-            for (int i = 0; i < rolesName.length; i++) {
-                if (role.getName().equals(rolesName[i])) {
+            for (String s : rolesName) {
+                if (role.getName().equals(s)) {
                     roleSet.add(role);
                 }
             }
         }
-
         user.setRoles(roleSet);
-        userService.editUser(user);
-        return "redirect:/admin";
+        return user;
     }
 }

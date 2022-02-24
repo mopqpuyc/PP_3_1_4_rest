@@ -48,8 +48,15 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String firstName, int age) {
-        this.name = firstName;
+    public User(String name, int age, String username, String password) {
+        this.name = name;
+        this.age = age;
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(String name, int age) {
+        this.name = name;
         this.age = age;
     }
 

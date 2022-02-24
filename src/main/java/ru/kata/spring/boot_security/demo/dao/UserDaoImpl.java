@@ -1,16 +1,20 @@
 package ru.kata.spring.boot_security.demo.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import java.util.Collections;
+import javax.persistence.Query;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 public class UserDaoImpl implements UserDao{
@@ -27,7 +31,6 @@ public class UserDaoImpl implements UserDao{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        user.setRoles(Collections.singleton(new Role(1L, "USER")));
         entityManager.persist(user);
         return true;
     }
@@ -71,6 +74,24 @@ public class UserDaoImpl implements UserDao{
     @Override
     public List<Role> getAllRoles() {
         return entityManager.createQuery("from Role", Role.class).getResultList();
+    }
+
+    @Transactional
+    public void addDefaultUsers() {
+        Role roleAdmin = new Role(1L,"ADMIN");
+        Role roleUser = new Role(2L,"USER");
+        User admin = new User("Admin", 30, "Admin",
+                "$2y$10$LA3C7cUEW50jSImPQq2C2.2HiBNFI0C6dQKOsbCr1mhg2xhqG2ut6"); //password 1
+        admin.setRoles(Stream.of(roleAdmin).collect(Collectors.toSet()));
+        User user = new User("User", 30, "User",
+                "$2y$10$o0rMRUh.VpacR96T65CDruxDoRs8wvK48pP4CN8gjYwmxmpTZgIdW"); //password 2
+        user.setRoles(Stream.of(roleUser).collect(Collectors.toSet()));
+        roleUser.setUsers(Stream.of(user).collect(Collectors.toSet()));
+        roleAdmin.setUsers(Stream.of(admin).collect(Collectors.toSet()));
+        entityManager.persist(admin);
+        entityManager.persist(user);
+        entityManager.persist(roleAdmin);
+        entityManager.persist(roleUser);
     }
 }
 

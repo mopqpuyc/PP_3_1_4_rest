@@ -10,6 +10,7 @@ import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Service
@@ -72,7 +73,5 @@ public class UserServiceImpl implements UserService{
         }
         return user;
     }
-
-
 }
 
