@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.model;
+package ru.kata.spring.bootstrap.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -22,10 +22,6 @@ public class Role implements GrantedAuthority {
     private Set<User> users;
 
     public Role() {}
-
-    public Role(Long id) {
-        this.id = id;
-    }
 
     public Role(Long id, String name) {
         this.id = id;

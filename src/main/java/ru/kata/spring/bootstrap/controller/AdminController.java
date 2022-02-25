@@ -1,13 +1,14 @@
-package ru.kata.spring.boot_security.demo.controller;
+package ru.kata.spring.bootstrap.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.model.Role;
-import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.bootstrap.model.Role;
+import ru.kata.spring.bootstrap.model.User;
+import ru.kata.spring.bootstrap.service.RoleService;
+import ru.kata.spring.bootstrap.service.UserService;
 
 import javax.validation.Valid;
 import java.util.HashSet;
@@ -18,10 +19,12 @@ import java.util.Set;
 public class AdminController {
 
     private UserService userService;
+    private RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     public AdminController() {}
@@ -40,7 +43,7 @@ public class AdminController {
 
     @GetMapping("/new")
     public String addUser(@ModelAttribute("user") User user, ModelMap model) {
-        model.addAttribute("allRoles", userService.getAllRoles());
+        model.addAttribute("allRoles", roleService.getAllRoles());
         return "new";
     }
 
@@ -57,7 +60,7 @@ public class AdminController {
     @GetMapping("/{id}/edit")
     public String editUser(ModelMap model, @PathVariable("id") Long id) {
         model.addAttribute("user", userService.showUser(id));
-        model.addAttribute("allRoles", userService.getAllRoles());
+        model.addAttribute("allRoles", roleService.getAllRoles());
         return "edit";
     }
 
@@ -74,7 +77,7 @@ public class AdminController {
     private User setUserRoles(User user, String[] rolesName) {
         Set<Role> roleSet = new HashSet<>();
         //Создание нового списка ролей из rolesName
-        for (Role role : userService.getAllRoles()) {
+        for (Role role : roleService.getAllRoles()) {
             for (String s : rolesName) {
                 if (role.getName().equals(s)) {
                     roleSet.add(role);

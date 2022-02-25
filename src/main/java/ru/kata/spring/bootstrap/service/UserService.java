@@ -1,8 +1,8 @@
-package ru.kata.spring.boot_security.demo.service;
+package ru.kata.spring.bootstrap.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.kata.spring.boot_security.demo.model.Role;
-import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.bootstrap.model.Role;
+import ru.kata.spring.bootstrap.model.User;
 
 import java.util.List;
 
@@ -12,5 +12,4 @@ public interface UserService extends UserDetailsService {
     List<User> showAllUsers();
     void editUser(User user);
     void deleteUser(Long id);
-    List<Role> getAllRoles();
 }
