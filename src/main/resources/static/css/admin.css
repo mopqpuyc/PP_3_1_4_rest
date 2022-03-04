@@ -1,0 +1,9 @@
+.col-2-custom {
+    -ms-flex:0 0 16.666667%;
+    flex:0 0 16.666667%;
+    max-width:16.666667%;
+    position:relative;
+    width:100%;
+    padding-right:0px;
+    padding-left:0px;
+}

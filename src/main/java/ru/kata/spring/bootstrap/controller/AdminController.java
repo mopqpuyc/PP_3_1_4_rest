@@ -1,6 +1,7 @@
 package ru.kata.spring.bootstrap.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -30,8 +31,11 @@ public class AdminController {
     public AdminController() {}
 
     @GetMapping("")
-    public String showAllUsers(ModelMap model) {
+    public String showAllUsers(@AuthenticationPrincipal User user,
+                               @ModelAttribute("usernew") User usernew, ModelMap model) {
         model.addAttribute("userList", userService.showAllUsers());
+        model.addAttribute("user", user);
+        model.addAttribute("allRoles", roleService.getAllRoles());
         return "admin";
     }
 
@@ -48,12 +52,12 @@ public class AdminController {
     }
 
     @PostMapping()
-    public String createUser(@ModelAttribute("user") @Valid User user,
+    public String createUser(@ModelAttribute("usernew") @Valid User usernew,
                              BindingResult bindingResult,
                              @RequestParam(value = "rolesName", defaultValue = "") String[] rolesName) {
         if(bindingResult.hasErrors())
-            return "new";
-        userService.createUser(setUserRoles(user, rolesName));
+            return "/admin";
+        userService.createUser(setUserRoles(usernew, rolesName));
         return "redirect:/admin";
     }
 

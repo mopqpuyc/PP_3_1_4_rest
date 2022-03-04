@@ -1,44 +1,165 @@
-<!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <meta charset="UTF-8" />
-    <title>User List</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/css/bootstrap.min-jsf.css">
+    <link rel="stylesheet"  th:href="@{/css/admin.css}">
+    <script src="/webjars/jquery/3.0.0/jquery.min.js"></script>
+    <script src="/webjars/popper.js/1.14.3/popper.min.js"></script>
+    <script src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title>Admin panel</title>
 </head>
 <body>
-<h1>User List</h1>
-<div>
-    <table th:border="1">
-        <tr>
-            <th>id</th>
-            <th>name</th>
-            <th>age</th>
-            <th>username</th>
-            <th>password</th>
-            <th>roles</th>
-        </tr>
-        <tr th:each ="user : ${userList}">
-            <td th:utext="${user.id}">...</td>
-            <td th:utext="${user.name}">...</td>
-            <td th:utext="${user.age}">...</td>
-            <td th:utext="${user.username}">...</td>
-            <td th:utext="${user.password}">...</td>
-            <td th:text="${#strings.setJoin(user.roles,',')}"></td>
-            <td>
-                <button type="button">
-                    <a th:href="@{/admin/{id}/edit(id=${user.id})}">edit</a>
-                </button>
-            </td>
-            <td>
-                <form th:method="DELETE" th:action="@{/admin/{id}/delete(id=${user.id})}">
-                    <input type="submit" value="delete">
-                </form>
-            </td>
-        </tr>
-    </table>
+<!--Верхняя панель навигации-->
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+            <a class="nav-link text-white font-weight-bolder" th:text="${user.email}">User email</a>
+        </li>
+        <li>
+            <a class="nav-link text-white">with roles:</a>
+        </li>
+        <li class="nav-item active" th:each="role : ${user.roles}">
+            <a class="nav-link text-white"
+               th:text="${role}">roles
+            </a>
+        </li>
+    </ul>
+    <a class="nav-link text-secondary ml-auto" th:href="@{/logout}">Logout</a>
+</nav>
+
+<div class="container-fluid">
+    <div class="row vh-100">
+        <!--Переключение отбражений по ролям-->
+        <div class="col-2-custom bg-white">
+            <div class="list-group">
+                <a class="list-group-item list-group-item-action text-primary"
+                   th:each="role : ${user.roles}"
+                   th:text="${role}"
+                   th:href="@{/{id}(id=${#strings.toLowerCase(role)})}">roles
+                </a>
+            </div>
+        </div>
+        <!--Основная таблица-->
+        <div class="col-10 bg-light">
+            <h1>Admin panel</h1>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#userstable">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#newuser">New User</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="userstable">
+                    <div class="container-fluid rounded border">
+                        <div class="row border" style="background-color: whitesmoke;">
+                            <p class="text-dark"
+                               style="margin: 10px;  font-size: 20px">All users
+                            </p>
+                        </div>
+                        <table class="table table-striped" style="margin-top: 10px">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Age</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${userList}">
+                                <td th:text="${user.id}">...</td>
+                                <td th:text="${user.firstName}">...</td>
+                                <td th:text="${user.lastName}">...</td>
+                                <td th:text="${user.age}">...</td>
+                                <td th:text="${user.email}">...</td>
+                                <td th:text="${#strings.setJoin(user.roles,' ')}">...</td>
+                                <td>
+                                    <a th:href="@{/admin/{id}/edit(id=${user.id})}" class="btn btn-info">Edit</a>
+                                </td>
+                                <td>
+                                    <a th:method="DELETE" th:href="@{/admin/{id}/delete(id=${user.id})}"
+                                        class="btn btn-danger">Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--Форма добавления юзера-->
+                <div class="tab-pane fade" id="newuser">
+                    <div class="container-fluid rounded border">
+                        <div class="row border" style="background-color: whitesmoke;">
+                            <p class="text-dark"
+                               style="margin: 10px;  font-size: 20px">Add new user
+                            </p>
+                        </div>
+                        <form class="container text-center" style="max-width: 30%"
+                              th:method="POST" th:action="@{/admin}" th:object="${usernew}">
+                            <div class="form-group">
+                                <label for="firstName" style="margin-top: 10px; margin-bottom: 0">First name
+                                </label>
+                                <input type="text" class="form-control form-control-sm" th:field="*{firstName}"
+                                       id="firstName" placeholder="First name">
+                                <!--<div style="color:orangered" th:if="${#fields.hasErrors('firstName')}"
+                                     th:errors="*{firstName}">First name error
+                                </div>-->
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName" style="margin-bottom: 0">Last name</label>
+                                <input type="text" class="form-control form-control-sm" th:field="*{lastName}"
+                                       id="lastName" placeholder="Last name">
+                                <!--<div style="color:orangered" th:if="${#fields.hasErrors('lastName')}"
+                                     th:errors="*{lastName}">Last name error
+                                </div>-->
+                            </div>
+                            <div class="form-group">
+                                <label for="age" style="margin-bottom: 0">Age</label>
+                                <input type="text" class="form-control form-control-sm" th:field="*{age}"
+                                       id="age" placeholder="Age">
+                                <!--<div style="color:orangered" th:if="${#fields.hasErrors('age')}"
+                                     th:errors="*{age}">Age error
+                                </div>-->
+                            </div>
+                            <div class="form-group">
+                                <label for="email" style="margin-bottom: 0">Email</label>
+                                <input type="email" class="form-control form-control-sm" th:field="*{email}"
+                                       id="email" placeholder="Email">
+                                <!--<div style="color:orangered" th:if="${#fields.hasErrors('email')}"
+                                     th:errors="*{email}">Email error
+                                </div>-->
+                            </div>
+                            <div class="form-group">
+                                <label for="password" style="margin-bottom: 0">Password</label>
+                                <input type="text" class="form-control form-control-sm" th:field="*{password}"
+                                       id="password" placeholder="Password">
+                                <!--<div style="color:orangered" th:if="${#fields.hasErrors('password')}"
+                                     th:errors="*{password}">Password error
+                                </div>-->
+                            </div>
+                            <div class="form-group">
+                                <label for="role" style="margin-bottom: 0">Role</label>
+                                <select multiple class="form-control" style="height: 60px" id="role">
+                                    <option th:each="role : ${allRoles}" th:text="${role}">role</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn-success rounded"
+                                    style="margin-bottom: 10px">Add new user
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<a th:href="@{/admin/new}">Add new user</a>
-<br>
-<a th:href="@{/logout}">logout</a>
+
 </body>
 </html>

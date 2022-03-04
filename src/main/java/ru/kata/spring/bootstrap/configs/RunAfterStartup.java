@@ -26,13 +26,13 @@ public class RunAfterStartup {
     public void runAfterStartup() {
         Role roleAdmin = new Role(1L,"ADMIN");
         Role roleUser = new Role(2L,"USER");
-        User admin = new User("Admin", 30, "Admin",
+        User admin = new User("Admin", "Admin", 30, "admin@mail.ru", "Admin",
                 "1"); //password 1
-        admin.setRoles(Set.of(roleAdmin));
-        User user = new User("User", 30, "User",
+        admin.setRoles(Set.of(roleAdmin, roleUser));
+        User user = new User("User", "User", 30, "user@mail.ru", "User",
                 "2"); //password 2
         user.setRoles(Set.of(roleUser));
-        roleUser.setUsers(Set.of(user));
+        roleUser.setUsers(Set.of(admin, user));
         roleAdmin.setUsers(Set.of(admin));
         userService.createUser(admin);
         userService.createUser(user);

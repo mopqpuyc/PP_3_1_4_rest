@@ -11,8 +11,8 @@
     <input type="hidden" name="_method" value="put">
 
     <label for="name">Enter name</label>
-    <input type="text" th:field="*{name}" id="name"/>
-    <div style="color:orangered" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+    <input type="text" th:field="*{firstName}" id="name"/>
+    <div style="color:orangered" th:if="${#fields.hasErrors('name')}" th:errors="*{firstName}">Name error</div>
     <br/>
     <label for="age">Enter age</label>
     <input type="text" th:field="*{age}" id="age"/>

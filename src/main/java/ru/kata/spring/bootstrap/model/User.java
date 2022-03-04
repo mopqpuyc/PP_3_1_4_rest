@@ -20,15 +20,25 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "firstName")
     @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 20, message = "Name length should be between 2 and 20")
-    private String name;
+    @Size(min = 2, max = 20, message = "First name length should be between 2 and 20")
+    private String firstName;
+
+    @Column(name = "lastName")
+    @NotEmpty(message = "Name should not be empty")
+    @Size(min = 2, max = 20, message = "Last name length should be between 2 and 20")
+    private String lastName;
 
     @Column(name = "age")
     @Min(value = 0, message = "Min age is 0")
     @Max(value = 100, message = "Max age is 100")
     private int age;
+
+    @Column(name = "email")
+    @NotEmpty(message = "Name should not be empty")
+    @Size(min = 2, max = 20, message = "Last name length should be between 2 and 20")
+    private String email;
 
     @Column(name = "username")
     @NotEmpty(message = "Username should not be empty")
@@ -48,16 +58,20 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String name, int age, String username, String password) {
-        this.name = name;
+    public User(String firstName, String lastName, int age, String email, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.age = age;
+        this.email = email;
         this.username = username;
         this.password = password;
     }
 
-    public User(String name, int age) {
-        this.name = name;
+    public User(String firstName, String lastName, int age, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.age = age;
+        this.email = email;
     }
 
     public Long getId() {
@@ -68,12 +82,12 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String firstName) {
-        this.name = firstName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public int getAge() {
@@ -86,6 +100,22 @@ public class User implements UserDetails {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
