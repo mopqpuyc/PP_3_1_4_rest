@@ -56,19 +56,12 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
-    public String editUser(ModelMap model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userService.showUser(id));
-        model.addAttribute("allRoles", roleService.getAllRoles());
-        return "edit";
-    }
-
     @PutMapping()
     public String updateUser(@ModelAttribute("useredit") @Valid User useredit,
                              BindingResult bindingResult,
                              @RequestParam(value = "rolesName", defaultValue = "") String[] rolesName) {
         if(bindingResult.hasErrors())
-            return "edit";
+            return "redirect:/admin";
         userService.editUser(setUserRoles(useredit, rolesName));
         return "redirect:/admin";
     }
