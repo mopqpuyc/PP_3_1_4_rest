@@ -32,6 +32,7 @@ public class AdminController {
 
     @GetMapping("")
     public String showAllUsers(@AuthenticationPrincipal User user,
+                               @ModelAttribute("useredit") User userEditConfirmed,
                                @ModelAttribute("usernew") User usernew, ModelMap model) {
         model.addAttribute("userList", userService.showAllUsers());
         model.addAttribute("user", user);
@@ -39,16 +40,10 @@ public class AdminController {
         return "admin";
     }
 
-    @DeleteMapping("/{id}/delete")
-    public String deleteUser(@PathVariable Long id) {
+    @DeleteMapping()
+    public String deleteUser(@RequestParam(value = "deleteId", defaultValue = "0") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";
-    }
-
-    @GetMapping("/new")
-    public String addUser(@ModelAttribute("user") User user, ModelMap model) {
-        model.addAttribute("allRoles", roleService.getAllRoles());
-        return "new";
     }
 
     @PostMapping()
@@ -56,7 +51,7 @@ public class AdminController {
                              BindingResult bindingResult,
                              @RequestParam(value = "rolesName", defaultValue = "") String[] rolesName) {
         if(bindingResult.hasErrors())
-            return "/admin";
+            return "redirect:/admin";
         userService.createUser(setUserRoles(usernew, rolesName));
         return "redirect:/admin";
     }
@@ -68,13 +63,13 @@ public class AdminController {
         return "edit";
     }
 
-    @PutMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") @Valid User user,
+    @PutMapping()
+    public String updateUser(@ModelAttribute("useredit") @Valid User useredit,
                              BindingResult bindingResult,
                              @RequestParam(value = "rolesName", defaultValue = "") String[] rolesName) {
         if(bindingResult.hasErrors())
             return "edit";
-        userService.editUser(setUserRoles(user, rolesName));
+        userService.editUser(setUserRoles(useredit, rolesName));
         return "redirect:/admin";
     }
 

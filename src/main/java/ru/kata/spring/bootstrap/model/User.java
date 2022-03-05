@@ -4,10 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -37,13 +34,8 @@ public class User implements UserDetails {
 
     @Column(name = "email")
     @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 20, message = "Last name length should be between 2 and 20")
+    @Size(min = 2, max = 40, message = "Last name length should be between 2 and 20")
     private String email;
-
-    @Column(name = "username")
-    @NotEmpty(message = "Username should not be empty")
-    @Size(min = 2, max = 20, message = "Name length should be between 2 and 20")
-    private String username;
 
     @Column(name = "password")
     @NotEmpty(message = "Password should not be empty")
@@ -58,12 +50,11 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String firstName, String lastName, int age, String email, String username, String password) {
+    public User(String firstName, String lastName, int age, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.email = email;
-        this.username = username;
         this.password = password;
     }
 
@@ -99,7 +90,7 @@ public class User implements UserDetails {
     }
 
     public String getUsername() {
-        return username;
+        return email;
     }
 
     public String getLastName() {
@@ -136,10 +127,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
