@@ -1,10 +1,10 @@
-package ru.kata.spring.bootstrap.controller;
+package ru.kata.spring.rest.controller;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.bootstrap.model.User;
+import ru.kata.spring.rest.model.User;
 
 @Controller
 public class UserController {

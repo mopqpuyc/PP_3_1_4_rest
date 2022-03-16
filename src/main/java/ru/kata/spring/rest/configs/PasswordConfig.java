@@ -1,4 +1,4 @@
-package ru.kata.spring.bootstrap.configs;
+package ru.kata.spring.rest.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

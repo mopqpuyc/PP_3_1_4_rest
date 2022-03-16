@@ -1,8 +1,7 @@
-package ru.kata.spring.bootstrap.service;
+package ru.kata.spring.rest.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.kata.spring.bootstrap.model.Role;
-import ru.kata.spring.bootstrap.model.User;
+import ru.kata.spring.rest.model.User;
 
 import java.util.List;
 

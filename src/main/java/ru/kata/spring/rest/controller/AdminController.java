@@ -1,4 +1,4 @@
-package ru.kata.spring.bootstrap.controller;
+package ru.kata.spring.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -6,10 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.bootstrap.model.Role;
-import ru.kata.spring.bootstrap.model.User;
-import ru.kata.spring.bootstrap.service.RoleService;
-import ru.kata.spring.bootstrap.service.UserService;
+import ru.kata.spring.rest.model.Role;
+import ru.kata.spring.rest.model.User;
+import ru.kata.spring.rest.service.RoleService;
+import ru.kata.spring.rest.service.UserService;
 
 import javax.validation.Valid;
 import java.util.HashSet;
@@ -32,21 +32,14 @@ public class AdminController {
 
     @GetMapping("")
     public String showAllUsers(@AuthenticationPrincipal User user,
-                               @ModelAttribute("useredit") User userEditConfirmed,
                                @ModelAttribute("usernew") User usernew, ModelMap model) {
-        model.addAttribute("userList", userService.showAllUsers());
-        model.addAttribute("user", user);
-        model.addAttribute("allRoles", roleService.getAllRoles());
-        return "admin";
+        model.addAttribute("authorizeUser", user);
+        return "test";
     }
 
-    @DeleteMapping()
-    public String deleteUser(@RequestParam(value = "deleteId", defaultValue = "0") Long id) {
-        userService.deleteUser(id);
-        return "redirect:/admin";
-    }
 
-    @PostMapping()
+
+    //@PostMapping()
     public String createUser(@ModelAttribute("usernew") @Valid User usernew,
                              BindingResult bindingResult,
                              @RequestParam(value = "rolesName", defaultValue = "") String[] rolesName) {
@@ -56,15 +49,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PutMapping()
-    public String updateUser(@ModelAttribute("useredit") @Valid User useredit,
-                             BindingResult bindingResult,
-                             @RequestParam(value = "rolesName", defaultValue = "") String[] rolesName) {
-        if(bindingResult.hasErrors())
-            return "redirect:/admin";
-        userService.editUser(setUserRoles(useredit, rolesName));
-        return "redirect:/admin";
-    }
+
 
     private User setUserRoles(User user, String[] rolesName) {
         Set<Role> roleSet = new HashSet<>();

@@ -1,4 +1,4 @@
-package ru.kata.spring.bootstrap.model;
+package ru.kata.spring.rest.model;
 
 import org.springframework.security.core.GrantedAuthority;
 

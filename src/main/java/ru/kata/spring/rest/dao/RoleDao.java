@@ -1,6 +1,6 @@
-package ru.kata.spring.bootstrap.dao;
+package ru.kata.spring.rest.dao;
 
-import ru.kata.spring.bootstrap.model.Role;
+import ru.kata.spring.rest.model.Role;
 
 import java.util.List;
 

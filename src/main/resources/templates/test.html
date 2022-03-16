@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="webjars/bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet"  th:href="@{/css/admin.css}">
+    <title>Admin panel</title>
+</head>
+<body class="text-center">
+
+<!--Верхняя панель навигации-->
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+            <a class="nav-link text-white font-weight-bolder"
+               th:text="${authorizeUser.email}">User email</a>
+        </li>
+        <li>
+            <a class="nav-link text-white">with roles:</a>
+        </li>
+        <li class="nav-item active" th:each="role : ${authorizeUser.roles}">
+            <a class="nav-link text-white"
+               th:text="${role}">roles
+            </a>
+        </li>
+    </ul>
+    <a class="nav-link text-secondary ml-auto" th:href="@{/logout}">Logout</a>
+</nav>
+
+<!--таблица юзеров-->
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-center">
+        <div>
+            <table class="table table-striped" id="mainTableWithUsers">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--скрытое дефолтное модальное окно -->
+<div class="modal fade" id="defaultModal" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+            </div>
+
+            <div class="modal-footer">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="webjars/jquery/3.5.1/jquery.js"></script>
+<script src="webjars/popper.js/1.16.0/umd/popper.js"></script>
+<script src="webjars/bootstrap/4.5.3/js/bootstrap.min.js"></script>
+<script src="/js/test.js"></script>
+</body>
+</html>

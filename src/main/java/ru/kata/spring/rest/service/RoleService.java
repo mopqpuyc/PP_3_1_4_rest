@@ -1,6 +1,6 @@
-package ru.kata.spring.bootstrap.service;
+package ru.kata.spring.rest.service;
 
-import ru.kata.spring.bootstrap.model.Role;
+import ru.kata.spring.rest.model.Role;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.List;

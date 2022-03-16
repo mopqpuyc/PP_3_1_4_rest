@@ -1,10 +1,10 @@
-package ru.kata.spring.bootstrap.service;
+package ru.kata.spring.rest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.bootstrap.dao.RoleDao;
-import ru.kata.spring.bootstrap.model.Role;
+import ru.kata.spring.rest.dao.RoleDao;
+import ru.kata.spring.rest.model.Role;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.List;
