@@ -1,61 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link href="webjars/bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet"  th:href="@{/css/admin.css}">
     <title>Admin panel</title>
 </head>
 <body>
+
 <!--Верхняя панель навигации-->
-<!--<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link text-white font-weight-bolder" th:text="${user.email}">User email</a>
+            <a class="nav-link text-white font-weight-bolder"
+               th:text="${authorizeUser.email}">User email</a>
         </li>
         <li>
             <a class="nav-link text-white">with roles:</a>
         </li>
-        <li class="nav-item active" th:each="role : ${user.roles}">
+        <li class="nav-item active" th:each="role : ${authorizeUser.roles}">
             <a class="nav-link text-white"
                th:text="${role}">roles
             </a>
         </li>
     </ul>
     <a class="nav-link text-secondary ml-auto" th:href="@{/logout}">Logout</a>
-</nav>-->
+</nav>
 
 <div class="container-fluid">
     <div class="row vh-100">
         <!--Переключение отбражений по ролям-->
-        <!--<div class="col-2-custom bg-white">
-            <div class="list-group">
+        <div class="col-2-custom bg-white">
+            <div class="list-group" id="userPages">
                 <a class="list-group-item list-group-item-action text-primary"
-                   th:each="role : ${user.roles}"
+                   th:each="role : ${authorizeUser.roles}"
                    th:text="${role}"
                    th:href="@{/{id}(id=${#strings.toLowerCase(role)})}">roles
                 </a>
             </div>
-        </div>-->
-        <!--Основная таблица-->
+        </div>
+
+        <!--таблица юзеров-->
         <div class="col-10 bg-light">
             <h1>Admin panel</h1>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#userstable">Users table</a>
+                    <a class="nav-link active" data-toggle="tab" href="#mainTableWithUsers">Users table</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#newuser">New User</a>
+                    <a class="nav-link" data-toggle="tab" href="#newUserTab">New User</a>
                 </li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="userstable">
+                <div class="tab-pane fade show active" id="mainTableWithUsers">
                     <div class="container-fluid rounded border">
                         <div class="row border" style="background-color: whitesmoke;">
                             <p class="text-dark"
                                style="margin: 10px;  font-size: 20px">All users
                             </p>
                         </div>
-                        <table class="table table-striped" id="mainTableWithUsers" style="margin-top: 10px">
+                        <table class="table table-striped" >
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -71,76 +75,41 @@
                             <tbody>
                             </tbody>
                         </table>
-                        <!-- The Modal edit -->
-                        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <!--<input type="hidden" name="_method" value="put">-->
-                                    <!-- Modal Header -->
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Edit user</h4>
-                                        <button type="button" class="close" data-dismiss="modal">×</button>
-                                    </div>
-                                    <!-- Modal body -->
-                                    <div class="modal-body container"  style="max-width: 50%">
-                                        <div class="container text-center">
-                                            <div class="form-group">
-                                                <label for="editId" style="margin-top: 10px; margin-bottom: 0"></label>
-                                                <input type="text" class="form-control form-control-sm" value=""
-                                                       id="editId" readonly>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editFirstName" style="margin-bottom: 0">First name
-                                                </label>
-                                                <input type="text" class="form-control form-control-sm" value=""
-                                                       id="editFirstName" placeholder="First name" required minlength="2"
-                                                       maxlength="20">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editLastName" style="margin-bottom: 0">Last name</label>
-                                                <input type="text" class="form-control form-control-sm" value=""
-                                                       id="editLastName" placeholder="Last name" required minlength="2"
-                                                       maxlength="20">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editAge" style="margin-bottom: 0">Age</label>
-                                                <input type="number" class="form-control form-control-sm" value=""
-                                                       id="editAge" placeholder="Age" required min="0" max="100">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editEmail" style="margin-bottom: 0">Email</label>
-                                                <input type="email" class="form-control form-control-sm" value=""
-                                                       id="editEmail" placeholder="Email" required minlength="2" maxlength="40">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editPassword" style="margin-bottom: 0">Password</label>
-                                                <input type="text" class="form-control form-control-sm"
-                                                       id="editPassword" placeholder="Password" required minlength="1">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="editRole" style="margin-bottom: 0">Role</label>
-                                                <select multiple class="form-control" style="height: 60px" id="editRole"
-                                                        name="editRoles" required>
-                                                    <option>role</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Modal footer -->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <!--<button id="editConfirm" class="btn btn-primary rounded">Edit</button>-->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
                     </div>
                 </div>
-
+                <!--Форма добавления юзера-->
+                <div class="tab-pane fade" id="newUserTab">
+                    <div class="container-fluid rounded border" id="newUserForm">
+                        <div class="row border" style="background-color: whitesmoke;">
+                            <p class="text-dark"
+                               style="margin: 10px;  font-size: 20px">Add new user
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!--скрытое дефолтное модальное окно -->
+<div class="modal fade" id="defaultModal" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+            </div>
+
+            <div class="modal-footer">
+            </div>
+
         </div>
     </div>
 </div>
@@ -149,6 +118,5 @@
 <script src="webjars/popper.js/1.16.0/umd/popper.js"></script>
 <script src="webjars/bootstrap/4.5.3/js/bootstrap.min.js"></script>
 <script src="/js/admin.js"></script>
-
 </body>
 </html>
