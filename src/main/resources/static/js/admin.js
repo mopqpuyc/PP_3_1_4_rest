@@ -3,8 +3,8 @@ let rolesList;
 
 $(async function () {
     await getRolesList();
-    getUsersTable();
-    addNewUser();
+    await getUsersTable();
+    await addNewUser();
 })
 
 const userFetchService = {
@@ -19,7 +19,7 @@ const userFetchService = {
     findUserById: async (id) => await fetch(`/admin/${id}`),
     addUser: async (user) => await fetch('/admin',
         {method: 'POST', headers: userFetchService.head, body: JSON.stringify(user)}),
-    updateUser: async (user, id) => await fetch(`/admin`,
+    updateUser: async (user) => await fetch(`/admin`,
         {method: 'PUT', headers: userFetchService.head, body: JSON.stringify(user)}),
     deleteUser: async (id) => await fetch(`admin/${id}`,
         {method: 'DELETE', headers: userFetchService.head})
@@ -33,7 +33,7 @@ async function getRolesList() {
 
 //вывод таблицы юзеров
 async function getUsersTable() {
-    let table = $('#mainTableWithUsers tbody');
+    let table = $('#allUsersTable tbody');
     table.empty();
 
     await userFetchService.findAllUsers()
@@ -48,13 +48,13 @@ async function getUsersTable() {
                     "<td>" + user.age + "</td>" +
                     "<td>" + user.email + "</td>" +
                     "<td>";
-                for(i in user.roles) {
+                for(let i in user.roles) {
                     tableFilling += user.roles[i].name + " ";
                 }
                 tableFilling += "</td>" +
                     "<td>" +
                     "<button type=\"button\" class=\"btn btn-primary btn-edit\"" +
-                    " data-userid="+ user.id +
+                    " data-userId="+ user.id +
                     " data-action=\"edit\"" +
                     " data-toggle=\"modal\"" +
                     " data-target=\"#defaultModal\">Edit" +
@@ -62,7 +62,7 @@ async function getUsersTable() {
                     "</td>" +
                     "<td>" +
                     "<button type=\"button\" class=\"btn btn-danger btn-delete\"" +
-                    " data-userid="+ user.id +
+                    " data-userId="+ user.id +
                     " data-action=\"delete\"" +
                     " data-toggle=\"modal\"" +
                     " data-target=\"#defaultModal\">Delete" +
@@ -74,16 +74,16 @@ async function getUsersTable() {
         })
 
     // открытие модального окна по кнопке
-    $("#mainTableWithUsers").find('button').on('click', (event) => {
+    $("#allUsersTable").find('button').on('click', (event) => {
 
         let defaultModal = $('#defaultModal');
 
         let targetButton = $(event.target);
-        let buttonUserId = targetButton.attr('data-userid');
-        let buttonAction = targetButton.attr('data-action');
+        let userId = targetButton.attr('data-userId');
+        let action = targetButton.attr('data-action');
 
-        defaultModal.attr('data-userid', buttonUserId);
-        defaultModal.attr('data-action', buttonAction);
+        defaultModal.attr('data-userId', userId);
+        defaultModal.attr('data-action', action);
 
         getDefaultModal();
     })
@@ -96,28 +96,28 @@ async function getDefaultModal() {
         backdrop: "static",
         show: false
     }).on("show.bs.modal", (event) => {
-        let thisModal = $(event.target);
-        let userid = thisModal.attr('data-userid');
-        let action = thisModal.attr('data-action');
-        thisModal.off("show.bs.modal");
+        let modal = $(event.target);
+        let userId = modal.attr('data-userId');
+        let action = modal.attr('data-action');
+        modal.off("show.bs.modal");
         if (action === 'edit') {
-            editUser(thisModal, userid);
+            editUser(modal, userId);
         } else if (action === 'delete') {
-            deleteUser(thisModal, userid);
+            deleteUser(modal, userId);
         }
     }).on("hidden.bs.modal", (e) => {
-        let thisModal = $(e.target);
-        thisModal.find('.modal-title').html('');
-        thisModal.find('.modal-body').html('');
-        thisModal.find('.modal-footer').html('');
+        let modal = $(e.target);
+        modal.find('.modal-title').html('');
+        modal.find('.modal-body').html('');
+        modal.find('.modal-footer').html('');
     })
 }
 
 
 // редактирование юзера в модальном окне
 async function editUser(modal, id) {
-    let preuser = await userFetchService.findUserById(id);
-    let user = preuser.json();
+    let userFromBD = await userFetchService.findUserById(id);
+    let user = userFromBD.json();
 
     modal.find('.modal-title').html('Edit user');
 
@@ -207,10 +207,10 @@ async function editUser(modal, id) {
                 password: password,
                 roles: filteredRoles
             }
-            const response = await userFetchService.updateUser(editedUser, id);
+            const response = await userFetchService.updateUser(editedUser);
 
             if (response.ok) {
-                getUsersTable();
+                await getUsersTable();
                 modal.modal('hide');
             } else {
                 alert("Not valid user data");
@@ -222,8 +222,8 @@ async function editUser(modal, id) {
 // удаление юзера
 async function deleteUser(modal, id) {
 
-    let preuser = await userFetchService.findUserById(id);
-    let user = preuser.json();
+    let userFromBD = await userFetchService.findUserById(id);
+    let user = userFromBD.json();
 
     modal.find('.modal-title').html('Delete user');
 
@@ -268,7 +268,7 @@ async function deleteUser(modal, id) {
 
     $("#deleteButton").on('click', async () => {
         await userFetchService.deleteUser(id);
-        getUsersTable();
+        await getUsersTable();
         modal.modal('hide');
     })
 }
@@ -354,7 +354,7 @@ async function addNewUser() {
             if (response.ok) {
                 let body = await response.json();
                 if (body.message === "Added successful") {
-                    getUsersTable();
+                    await getUsersTable();
                     $('.nav-tabs a:first').tab('show');
                 } else {
                     document.getElementById("errorMessage").innerHTML =

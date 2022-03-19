@@ -35,7 +35,7 @@ public class RestUserController {
     }
 
     @GetMapping("/admin/{id}")
-    public User apiGetOneUser(@PathVariable("id") long id) {
+    public User getUserById(@PathVariable("id") long id) {
         return userService.showUser(id);
     }
 
